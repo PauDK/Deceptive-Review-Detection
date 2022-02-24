@@ -14,6 +14,7 @@ A research has shown that human accuracy on this task is around 50%, thus this m
 ## Acknowledgements
 
  - [Paul, H., & Nikolaev, A. (2021). Fake review detection on online E-commerce platforms: a systematic literature review. Data Mining and Knowledge Discovery, 35(5), 1830-1881.](https://link.springer.com/article/10.1007/s10618-021-00772-6)
+ - [Jacob, D., Ming-Wei, C., Kenton, L., Kristina, T. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
  - [Ott, M., Cardie, C., & Hancock, J. T. (2013, June). Negative deceptive opinion spam. In Proceedings of the 2013 conference of the north american chapter of the association for computational linguistics: human language technologies (pp. 497-501).](https://aclanthology.org/N13-1053.pdf)
  - [Ott, M., Choi, Y., Cardie, C., & Hancock, J. T. (2011). Finding deceptive opinion spam by any stretch of the imagination. arXiv preprint arXiv:1107.4557.](https://arxiv.org/abs/1107.4557)
  
