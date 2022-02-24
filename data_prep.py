@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import re
 import numpy as np
-from scipy.sparse import coo_matrix
 from gensim.utils import simple_preprocess
 import nltk
 from nltk.stem import WordNetLemmatizer
