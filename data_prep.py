@@ -11,7 +11,7 @@ import contractions
 
 
 def import_chi_review():
-    file_dir = 'D://Python Projects/Fake_Review_Detection/Data/Chicago_Hotel_Review'
+    file_dir = 'Chicago_Hotel_Review'
     neg_dec_dir = file_dir + '/negative_polarity/deceptive_from_MTurk'
     neg_tru_dir = file_dir + '/negative_polarity/truthful_from_Web'
     pos_dec_dir = file_dir + '/positive_polarity/deceptive_from_MTurk'
