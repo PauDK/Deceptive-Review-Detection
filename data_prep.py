@@ -8,6 +8,7 @@ from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
 from nltk.corpus import wordnet
 import contractions
+from scipy.sparse import coo_matrix
 
 
 def import_chi_review():
