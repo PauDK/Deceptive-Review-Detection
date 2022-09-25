@@ -14,7 +14,7 @@ Deceptive:
 > Terrible experience, I will not stay here again. The walls were so thin that I was kept up all night by the party going on in the suite next to mine. I talked to the management several times, but nothing was done. It may just be the people that I had contact with, but I thought the staff was standoffish and rude. Very unpleasant experience, especially given the cost of staying here!
 
 I found that the distribution of most lexicon features are similar between truthful and deceptive reviews. However, as shown in the figure below, one subtle difference I found is that deceptive reviewers tend to use more first-person pronoun both singular and plural.
-
+![Pronoun](first_person_pronoun.PNG)
 
 Two models were developed: traditional NLP model using bag-of-word and lexicon features and fine-tuned pretrained neural network model. For the first model, data was cleaned by expanding word contractions, removing puncuations, tokenizing, lemmatizing, and removing stop words. Then unigram, bigram, and trigram bag-of-word features are created from this cleaned word tokens. Those features are then concatenated to other lexicon features - number of stop words, number of charactors per review, sentence length, number of first singular pronoun used - and fed into Random Forest which achieved 90% test set accuracy.
 
