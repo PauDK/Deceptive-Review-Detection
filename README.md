@@ -15,7 +15,7 @@ Deceptive:
 
 I found that the distribution of most lexicon features are similar between truthful and deceptive reviews. However, as shown in the figure below, one subtle difference I found is that deceptive reviewers tend to use more first-person pronoun both singular and plural.
 
-![Pronoun](first_person_pronoun.png)
+![Pronoun](first_person_pronoun.PNG)
 
 Two models were developed: traditional NLP model using bag-of-word and lexicon features and fine-tuned pretrained neural network model. For the first model, data was cleaned by expanding word contractions, removing puncuations, tokenizing, lemmatizing, and removing stop words. Then unigram, bigram, and trigram bag-of-word features are created from this cleaned word tokens. Those features are then concatenated to other lexicon features - number of stop words, number of charactors per review, sentence length, number of first singular pronoun used - and fed into Random Forest which achieved 90% test set accuracy.
 
