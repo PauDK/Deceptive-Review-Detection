@@ -8,6 +8,7 @@ From literature reviews, I discovered that [Deceptive Opinion Spam Corpus v1.4](
 From exploratory data analysis, I think that the dataset is of high quality (no wonder it's a gold standard data for research). See sample of truthful and deceptive review below.
 Truthful:
 > I stayed for four nights while attending a conference. The hotel is in a great spot - easy walk to Michigan Ave shopping or Rush St., but just off the busy streets. The room I had was spacious, and very well-appointed. The staff was friendly, and the fitness center, while not huge, was well-equipped and clean. I've stayed at a number of hotels in Chicago, and this one is my favorite. Internet wasn't free, but at $10 for 24 hours is cheaper than most business hotels, and it worked very well.
+
 Deceptive:
 > Terrible experience, I will not stay here again. The walls were so thin that I was kept up all night by the party going on in the suite next to mine. I talked to the management several times, but nothing was done. It may just be the people that I had contact with, but I thought the staff was standoffish and rude. Very unpleasant experience, especially given the cost of staying here!
 
