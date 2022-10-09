@@ -12,6 +12,16 @@ from scipy.sparse import coo_matrix
 
 
 def import_chi_review():
+    '''
+    Import Chicago Hotel Review dataset
+    Args:
+        None
+    Returns:
+        df (pd.DataFrame): A dataframe with the following columns 
+            - Label (int): -1 for truthful review, 1 for deceptive review 
+            - Rating (int): 1 for negative review, 5 for positive reivew
+            - Ori_Review (str): Original text review without any cleaning
+    '''
     file_dir = 'Chicago_Hotel_Review'
     neg_dec_dir = file_dir + '/negative_polarity/deceptive_from_MTurk'
     neg_tru_dir = file_dir + '/negative_polarity/truthful_from_Web'
@@ -48,7 +58,15 @@ def import_chi_review():
     df = pd.DataFrame({'Label': label, 'Rating': rating, 'Ori_Review': all_text})
     return df
 
+
 def get_wordnet_pos(treebank_tag):
+    '''
+    Get WordNet Part-of-Speech tagging
+    Args:
+        treebank_tag (str): string of detailed part-of-speech abbreviation
+    Returns:
+        Wordnet part-of-speech object grouping low-level part-of-speech to a higher level
+    '''
     if treebank_tag.startswith('J'):
         return wordnet.ADJ
     elif treebank_tag.startswith('V'):
@@ -60,24 +78,54 @@ def get_wordnet_pos(treebank_tag):
     else:
         return wordnet.NOUN
 
+    
 def lemmatize(words):
-    result = []
+    '''
+    Lemmatize each token in words through WordNet's Lemmatizer.
+    Ex. see, saw, seen -> see
+    Args:
+        words (list): list of tokens
+    Returns:
+        lemmatized_words (list): list of lemmatized token
+    '''
+    lemmatized_words = []
     lm = WordNetLemmatizer()
     for word, pos in nltk.pos_tag(words):
         lm_pos = get_wordnet_pos(pos)
-        result.append(lm.lemmatize(word, lm_pos))
-    return result
+        lemmatized_words.append(lm.lemmatize(word, lm_pos))
+    return lemmatized_words
     
     
-def remove_stopwords(sentence):
+def remove_stopwords(words):
+    '''
+    Remove stopwords (ex. by, for, from, the, to) using NLTK's stopwords vocab.
+    Args:
+        words (list): list of tokens
+    Returns:
+        result (list): list of tokens with stopwords removed
+    '''
     stop_words = stopwords.words('english')
     stop_words.extend(['chicago', 'hotel', 'would', 'could', 'should', 'might', 'room', 'stay'])
-    result = [word for word in sentence if word not in stop_words]
+    result = [word for word in words if word not in stop_words]
     return result
 
 
 # Remove Punctuation and turn all letter to lowercase
 def preprocess_ngram(df):
+    '''
+    Preprocess text reviews into bag-of-words with the following cleaning process: -
+        1. Remove contractions
+        2. Remove punctuations
+        3. Lemmatize words
+        4. Remove stopwords
+    Args:
+        df (pd.DataFrame): DataFrame containing text review in column Ori_Review
+    Returns
+        df_pp (pd.DataFrame): DataFrame containing the same data as input, but add 3 columns
+            1. Clean_Review (str): cleaned review texts
+            2. PP_Review (str): cleaned review text with stopwords removed
+            3. Word_List (list): list of token containing cleaned reviews with stopwords removed
+    '''
     df_pp = df.copy()
     clean_review = df_pp['Ori_Review'].copy()
     clean_review = clean_review.apply(lambda x: x.lower())
@@ -110,6 +158,9 @@ def preprocess_ling_feature(df):
 
 
 def df2matrix(df, word2ind):
+    '''
+    Split dataframe into X matrix and label y
+    '''
     rows = []
     cols = []
     for r, document in enumerate(df['Ngram'].tolist()):
