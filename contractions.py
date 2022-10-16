@@ -1,4 +1,7 @@
 def gen_contractions():
+    '''
+    Initiate contraction dictionary
+    '''
     contraction_dict = {"ain't": "be not",
                     "aren't": "are not",
                     "can't": "cannot",

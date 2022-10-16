@@ -114,10 +114,11 @@ def remove_stopwords(words):
 def preprocess_ngram(df):
     '''
     Preprocess text reviews into bag-of-words with the following cleaning process: -
-        1. Remove contractions
-        2. Remove punctuations
-        3. Lemmatize words
-        4. Remove stopwords
+        1. Convert to lower case
+        2. Remove contractions
+        3. Remove punctuations
+        4. Lemmatize words
+        5. Remove stopwords
     Args:
         df (pd.DataFrame): DataFrame containing text review in column Ori_Review
     Returns
@@ -143,23 +144,20 @@ def preprocess_ngram(df):
     return df_pp
 
 
-def preprocess_ling_feature(df):
-    df_pp = df.copy()
-    clean_review = df_pp['Ori_Review'].copy()
-    clean_review = clean_review.apply(lambda x: x.lower())
-    contraction_dict = contractions.gen_contractions()
-    for con, full in contraction_dict.items():
-        clean_review = clean_review.apply(lambda x: re.sub(con, full, x))
-    clean_review = clean_review.apply(lambda x: re.sub('[,/.!?]', '', x))
-    words = clean_review.apply(lambda x: x.split())
-    words = words.apply(lambda x: lemmatize(x))
-    df_pp['Word_List_all'] = words
-    return df_pp
-
-
 def df2matrix(df, word2ind):
     '''
-    Split dataframe into X matrix and label y
+    Create bag-of-word matrix
+    Args:
+        df (pd.DataFrame): dataframe containing columns - Ngram, Rating, and Label
+        word2ind (dict): dict mapping ngrams to its index
+    Returns:
+        X (pd.DataFrame): dataframe containing 
+            - count of number of each ngrams in each reviews
+            - linguistic features
+            - Review's rating
+        y (pd.Series): ground truth label
+            - 1 denotes deceptive review
+            - 0 denotes truthful review
     '''
     rows = []
     cols = []
