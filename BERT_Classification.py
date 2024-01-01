@@ -42,15 +42,15 @@ class BertWithClassifier(nn.Module):
         if not train:
             with torch.no_grad():
                 bert_output = self.bert_layer(input_ids, token_type_ids, attention_mask)
-                # pred = softmax(self.fc(bert_output.last_hidden_state[:, 0, :]), dim=-1)
-                pred = softmax(self.fc(bert_output.pooler_output), dim=-1)
-                loss = self.loss(pred, y)
+                unnormalized_score = self.fc(bert_output.pooler_output)
+                pred = softmax(unnormalized_score, dim=-1)
+                loss = self.loss(unnormalized_score, y)
                 return pred, loss
     
         bert_output = self.bert_layer(input_ids, token_type_ids, attention_mask)
-        # pred = softmax(self.fc(bert_output.last_hidden_state[:, 0, :]), dim=-1)
-        pred = softmax(self.fc(bert_output.pooler_output), dim=-1)
-        loss = self.loss(pred, y)
+        unnormalized_score = self.fc(bert_output.pooler_output)
+        pred = softmax(unnormalized_score, dim=-1)
+        loss = self.loss(unnormalized_score, y)
         return pred, loss
 
 
@@ -80,12 +80,19 @@ class dataset(Dataset):
 def train(model, 
           data_loader, 
           val_data_loader, 
-          optimizer, 
-          learning_rate, 
-          loss_fn, 
+          optimizer,
+          learning_rate,  
           num_epochs,
-          device):
-    opt = optimizer(model.parameters(), lr=learning_rate)
+          device,
+          batch_size,
+          data_size,
+          scheduler=None):
+    opt = optimizer(model.parameters(), lr=learning_rate, weight_decay=0.01, eps=1e-07)
+    if scheduler is not None:
+        steps_per_epoch = data_size // batch_size
+        num_train_steps = steps_per_epoch * num_epochs
+        num_warmup_steps = num_train_steps // 10
+        sch = scheduler(opt, num_warmup_steps, num_train_steps)
     train_losses = []
     val_losses = []
     for epoch in tqdm.notebook.trange(num_epochs, desc='training', unit='epoch'):
@@ -105,10 +112,11 @@ def train(model,
                 loss.backward()
                 opt.step()
                 batch_iterator.set_postfix(mean_loss = total_loss / i, current_loss=loss.item())
+                sch.step()
             train_losses.append(total_loss.unsqueeze(0) / i)
             val_preds, val_loss, val_acc = validate(model, val_data_loader, device)
             print(val_acc)
-            val_losses.append(val_loss.unsqueeze(0) / i)
+            val_losses.append(val_loss.unsqueeze(0))
     return train_losses, val_losses
 
 
@@ -117,13 +125,14 @@ def validate(model, data_loader, device):
     accuracy = Accuracy().to(device)
     preds = torch.tensor([]).to(device)
     targets = torch.tensor([]).to(device)
-    for batch in data_loader:
+    for i, batch in enumerate(data_loader):
         input_ids, token_type_ids, attention_mask = (val.to(device) for val in batch[0].values())
         batch_targets = batch[1].to(device)
         pred, loss = model.forward(input_ids, token_type_ids, attention_mask, batch_targets, train=False)
         total_loss += loss
         preds = torch.cat([preds, pred])
         targets = torch.cat([targets, batch_targets])
+    total_loss /= i
     targets = targets.int().to(device)
     acc = accuracy(preds, targets)
     return preds, total_loss, acc
